@@ -100,4 +100,10 @@ class AuthController extends Controller
 
         return ['error' => false];
     }
+
+    public function refresh() {
+        $token = auth()->refresh();
+
+        return ['error' => false, 'token' => $token];
+    }
 }
