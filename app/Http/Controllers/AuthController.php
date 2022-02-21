@@ -94,4 +94,10 @@ class AuthController extends Controller
 
         return $array;
     }
+
+    public function logout() {
+        auth()->logout();
+
+        return ['error' => false];
+    }
 }
