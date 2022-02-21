@@ -7,6 +7,6 @@ use Illuminate\Database\Eloquent\Model;
 
 class PostComment extends Model
 {
-    public $timestamp = false;
+    public $timestamps = false;
     protected $table = 'postcomments';
 }

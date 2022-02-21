@@ -13,7 +13,7 @@ class User extends Authenticatable implements JWTSubject
 {
     use Notifiable;
 
-    public $timestamp = false;
+    public $timestamps = false;
 
     protected $hideen = ['password', 'token'];
 

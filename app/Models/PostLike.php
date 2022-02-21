@@ -7,6 +7,6 @@ use Illuminate\Database\Eloquent\Model;
 
 class PostLike extends Model
 {
-    public $timestamp = false;
+    public $timestamps = false;
     public $table = 'postlikes';
 }
