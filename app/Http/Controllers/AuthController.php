@@ -12,6 +12,12 @@ class AuthController extends Controller
         $this->middleware('auth:api', ['except' => ['lohin', 'create', 'unauthorized']]);
     }
 
+    public function unauthorized() {
+        return response()->json([
+            'message' => 'Unauthorized'
+        ], 401);
+    }
+
     public function create(Request $request) {
         $array = ['error' => false];
 
