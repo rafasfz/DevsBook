@@ -9,13 +9,7 @@ use App\Models\User;
 class AuthController extends Controller
 {
     public function __construct() {
-        $this->middleware('auth:api', ['except' => ['lohin', 'create', 'unauthorized']]);
-    }
-
-    public function unauthorized() {
-        return response()->json([
-            'message' => 'Unauthorized'
-        ], 401);
+        $this->middleware('auth:api', ['except' => ['login', 'create', 'unauthorized']]);
     }
 
     public function create(Request $request) {
@@ -63,6 +57,33 @@ class AuthController extends Controller
 
             return $array;
         }
+        $array['token'] = $token;
+
+        return $array;
+    }
+
+    public function unauthorized() {
+        return response()->json([
+            'message' => 'Unauthorized'
+        ], 401);
+    }
+
+    public function login(Request $request) {
+        $array = ['error' => false];
+
+        $email = $request->input('email');
+        $password = $request->input('password');
+
+        $token = auth()->attempt([
+            'email' => $email,
+            'password' => $password
+        ]);
+
+        if(!$token) {
+            $array['error'] = "E-mail or password wrong";
+            return $array;
+        }
+
         $array['token'] = $token;
 
         return $array;
