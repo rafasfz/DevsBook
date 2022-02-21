@@ -74,6 +74,12 @@ class AuthController extends Controller
         $email = $request->input('email');
         $password = $request->input('password');
 
+        if(!($email && $password)) {
+            $array['error'] = 'Missing login credentials';
+
+            return $array;
+        }
+
         $token = auth()->attempt([
             'email' => $email,
             'password' => $password
