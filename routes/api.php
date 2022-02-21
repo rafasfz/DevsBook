@@ -24,7 +24,7 @@ Route::get('/ping', function() {
 // Route::post('/auth/logout', 'AuthController@logout');
 // Route::post('/auth/refresh', 'AuthController@refresh');
 
-// Route::post('/user', 'AuthController@create');
+Route::post('/user', 'App\Http\Controllers\AuthController@create');
 // Route::put('/user', 'UserController@update');
 // Route::post('/user/avatar/', 'UserController@updateAvatar');
 // Route::post('/user/cover/', 'UserController@updateCover');
