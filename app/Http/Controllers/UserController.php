@@ -4,7 +4,9 @@ namespace App\Http\Controllers;
 
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
+use Illuminate\Support\Str;
 use App\Models\User;
+use Image;
 
 class UserController extends Controller
 {
@@ -77,5 +79,45 @@ class UserController extends Controller
 
 
         return $arr;
+    }
+
+    public function updateAvatar(Request $request) {
+        $arr = ['error' => false];
+        $allowedTypes = ['image/jpg', 'image/jpeg', 'image/png', 'image/gif', 'image/svg'];
+
+        $user = User::find($this->loggedUser['id']);
+        $destPath = public_path('/media/avatars/');
+
+        if($user->avatar) {
+            try {
+                unlink($destPath . $user->avatar);
+            } catch (\Exception $e) {
+                //
+            }
+        }
+
+        $image = $request->file('avatar');
+
+        if(!$image) {
+            $arr['error'] = 'No avatar provided';
+            return $arr;
+        }
+
+        if(in_array($image->getMimeType(), $allowedTypes) === false) {
+            $arr['error'] = 'Invalid image type. Just jpg, jpeg, png, gif and svg are allowed';
+            return $arr;
+        }
+
+        $filename = Str::uuid() . '.' . $image->getClientOriginalExtension();
+
+        Image::make($image->path())->save($destPath.'/'.$filename);
+
+        $user->avatar = $filename;
+        $user->save();
+        $arr['url'] = url('/media/avatars/'.$filename);
+        $arr['user'] = $user;
+
+        return $arr;
+
     }
 }
