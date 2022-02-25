@@ -182,8 +182,10 @@ class UserController extends Controller
         $user['me'] = $user['id'] == $this->loggedUser['id'];
 
         $user['followers'] = UserRelation::where('user_to', $user['id'])->count();
-        $user['following'] = UserRelation::where('user_from', $user['id'])->count();
+        $user['followings'] = UserRelation::where('user_from', $user['id'])->count();
         $user['photos'] = Post::where('id_user', $user['id'])->where('type', 'photo')->count();
+        $user['following'] = !!UserRelation::where('user_from', $this->loggedUser['id'])->where('user_to', $user['id'])->count();
+
 
         $arr['user'] = $user;
 
