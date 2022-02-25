@@ -159,4 +159,23 @@ class UserController extends Controller
 
         return $arr;
     }
+
+    public function read($id = false) {
+        $arr = ['error' => false];
+
+        if($id) {
+            $user = User::find($id);
+        } else {
+            $user = User::find($this->loggedUser['id']);
+        }
+
+        if(!$user) {
+            $arr['error'] = 'User not found';
+            return $arr;
+        }
+
+        $arr['user'] = $user;
+
+        return $arr;
+    }
 }
