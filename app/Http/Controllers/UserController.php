@@ -120,4 +120,43 @@ class UserController extends Controller
         return $arr;
 
     }
+
+    public function updateCover(Request $request) {
+        $arr = ['error' => false];
+        $allowedTypes = ['image/jpg', 'image/jpeg', 'image/png', 'image/gif', 'image/svg'];
+
+        $user = User::find($this->loggedUser['id']);
+        $destPath = public_path('/media/covers/');
+
+        if($user->cover) {
+            try {
+                unlink($destPath . $user->cover);
+            } catch (\Exception $e) {
+                //
+            }
+        }
+
+        $image = $request->file('cover');
+
+        if(!$image) {
+            $arr['error'] = 'No cover provided';
+            return $arr;
+        }
+
+        if(in_array($image->getMimeType(), $allowedTypes) === false) {
+            $arr['error'] = 'Invalid image type. Just jpg, jpeg, png, gif and svg are allowed';
+            return $arr;
+        }
+
+        $filename = Str::uuid() . '.' . $image->getClientOriginalExtension();
+
+        Image::make($image->path())->save($destPath.'/'.$filename);
+
+        $user->cover = $filename;
+        $user->save();
+        $arr['url'] = url('/media/covers/'.$filename);
+        $arr['user'] = $user;
+
+        return $arr;
+    }
 }
