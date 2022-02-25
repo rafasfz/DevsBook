@@ -6,6 +6,8 @@ use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Str;
 use App\Models\User;
+use App\Models\UserRelation;
+use App\Models\Post;
 use Image;
 
 class UserController extends Controller
@@ -173,6 +175,15 @@ class UserController extends Controller
             $arr['error'] = 'User not found';
             return $arr;
         }
+
+        $user['avatar'] = url('/media/avatars/'.$user->avatar);
+        $user['cover'] = url('/media/covers/'.$user->cover);
+
+        $user['me'] = $user['id'] == $this->loggedUser['id'];
+
+        $user['followers'] = UserRelation::where('user_to', $user['id'])->count();
+        $user['following'] = UserRelation::where('user_from', $user['id'])->count();
+        $user['photos'] = Post::where('id_user', $user['id'])->where('type', 'photo')->count();
 
         $arr['user'] = $user;
 
